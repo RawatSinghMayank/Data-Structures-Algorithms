@@ -38,5 +38,45 @@ int main(){
         cout << it << "\n";
     }
 
+    
+    return 0;
+}
+
+
+2nd approach
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int main(){
+
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    
+    freopen("cowsignal.in","r",stdin);
+    freopen("cowsignal.out","w",stdout);
+    int row, col, k;
+    cin >> row >> col >> k;
+
+    for (int i = 0; i < row; i++){
+        string before;
+        cin >> before;
+
+        string after;
+
+        for (auto & ch : before){
+            char current = ch;
+            for (int j = 0;j < k; j++){
+                after += current;
+            }
+        }
+
+        for (int j = 0; j < k; j++){
+            cout << after << "\n";
+        }
+
+    }
+  
+
     return 0;
 }
