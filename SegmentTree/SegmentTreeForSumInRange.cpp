@@ -1,0 +1,96 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <climits>
+using namespace std;
+#define endl "\n"
+
+class SegmentTree {
+
+	private:
+		vector <long long> segTree;
+	public:
+		SegmentTree(int n){
+			segTree.resize(4 * n + 1);
+		}
+		
+		void buildSegTree (int index, int low, int high, vector <long long> &nums){
+
+			if (low == high){
+				segTree[index] = nums[low];
+				return;
+			}
+		
+			int mid = low + ((high - low) >> 1);
+			buildSegTree (2 * index + 1, low, mid, nums);
+			buildSegTree (2 * index + 2, mid + 1,  high ,nums);
+				
+			segTree[index] = segTree[2 * index + 1] +  segTree [2 * index + 2];
+		}
+
+		long long querySegTree (int index, int low, int high, int left, int right){
+	
+			if (right < low || high < left){
+				return 0;
+			}else if (low >= left && high <= right){
+				return segTree[index];
+			}
+
+			int mid = low + ((high - low) >> 1);
+
+			long long leftSum = querySegTree (2 * index + 1, low, mid, left,right);
+			long long rightSum = querySegTree (2 * index + 2, mid + 1, high,left, right);
+				
+			return leftSum + rightSum;	
+			
+		}
+
+
+		void pointUpdate (int index, int low, int high, int i, long long value){
+	
+			if (low == high){
+				segTree[index] = value;
+				return;
+			}
+			int mid = low + ((high - low) >> 1);
+			if (i <= mid) pointUpdate (2 * index + 1, low,mid,i,value);
+			else pointUpdate (2 * index + 2,mid +1, high,i,value);
+
+			segTree[index] = segTree[2*index+1] + segTree[2*index+2];
+		}
+
+};
+
+
+signed main(){
+	
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr);
+
+	int n,m;
+	cin >> n >> m;
+		
+	vector <long long> nums (n);
+	for (int i = 0; i < n; i++){
+		cin >> nums[i];
+	}
+	
+	SegmentTree segTree(n);
+	segTree.buildSegTree (0,0,n - 1, nums);
+		
+	while (m--){
+
+		
+		int type,index, value;
+		cin >> type >> index >> value;
+
+		if (type == 1){
+			segTree.pointUpdate (0, 0, n - 1, index, value);
+		}else{
+			cout << segTree.querySegTree(0,0,n - 1,index,value - 1) << endl;
+		}
+		
+	}
+	
+	return 0;
+}

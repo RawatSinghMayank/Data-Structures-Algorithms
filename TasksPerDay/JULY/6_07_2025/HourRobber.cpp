@@ -1,0 +1,22 @@
+class Solution {
+    public:
+    
+        int rob(vector<int>& nums) {
+            
+            int n = nums.size();
+            vector <int> dp(n,0);
+            dp[0] = nums[0];
+    
+            for (int i = 1; i< n; i++){
+               
+               int take = INT_MIN,notTake = INT_MIN;
+                 notTake = dp[i - 1];
+                 take = nums[i];
+                 if (i > 1) take += dp[i-2];
+    
+                dp[i] =  max (notTake,take);
+            }
+    
+            return dp[n - 1];
+        }
+    };
